@@ -18,6 +18,13 @@
 ---
 
 
+<p align="center">
+  <img src="docs/screenshots/Dues Payments List with receipt number in the table.png"  alt="DESOC Logo">
+</p>
+
+---
+
+
 ## ✨ Features
 
 - **Authentication & Security**
