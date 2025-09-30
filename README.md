@@ -11,6 +11,13 @@
 
 ---
 
+<p align="center">
+  <img src="docs/screenshots/All Students List.png"  alt="DESOC Logo">
+</p>
+
+---
+
+
 ## ✨ Features
 
 - **Authentication & Security**
