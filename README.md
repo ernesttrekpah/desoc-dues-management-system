@@ -189,3 +189,8 @@ Bootstrap Volt
 barryvdh/laravel-dompdf
 
 SweetAlert2, Notyf
+
+
+
+---
+Developed and built with love ❤️ by : Ernest Trekpah
