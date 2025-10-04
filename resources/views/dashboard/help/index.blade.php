@@ -102,8 +102,8 @@
         <p>If you have issues not covered in this help section, please reach out:</p>
         <ul class="list-unstyled">
           <li><i class="bi bi-envelope me-2 text-primary"></i>Email: <a
-              href="mailto:support@example.com">support@example.com</a></li>
-          <li><i class="bi bi-telephone me-2 text-success"></i>Phone: +233 24 000 0000</li>
+              href="mailto:support@example.com">raacquah7@gmail.com</a></li>
+          <li><i class="bi bi-telephone me-2 text-success"></i>Phone: +233 548674916</li>
           <li><i class="bi bi-chat-dots me-2 text-info"></i>Live Chat: Available weekdays 9am - 5pm</li>
         </ul>
       </div>

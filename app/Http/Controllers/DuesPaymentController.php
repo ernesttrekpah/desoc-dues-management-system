@@ -8,7 +8,9 @@ use App\Models\Level;
 use App\Models\Souvenir;
 use App\Models\Student;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DuesPaymentController extends Controller
 {
@@ -73,31 +75,39 @@ class DuesPaymentController extends Controller
             'status'           => 'required|in:pending,confirmed,cancelled',
         ]);
 
-        // Create a unique receipt number,
-        $receiptNumber = 'R-' . strtoupper(uniqid());
+        // Ensure 'receipt_number' column is UNIQUE in migration
+        // $table->string('receipt_number')->unique();
 
-        // check if that receipt number already exists
-        while (DuesPayment::where('receipt_number', $receiptNumber)->exists()) {
-            $receiptNumber = 'R-' . strtoupper(uniqid());
+        // Generate a unique receipt number (retry on collision)
+        do {
+            $receiptNumber = 'R-' . Str::upper(Str::random(10));
+        } while (DuesPayment::where('receipt_number', $receiptNumber)->exists());
+
+        try {
+            $payment = DuesPayment::create([
+                'student_id'         => $request->student_id,
+                'due_id'             => $request->due_id,
+                'academic_year_id'   => $request->academic_year_id,
+                'level_id'           => $request->level_id,
+                'date_paid'          => $request->date_paid,
+                'amount_paid'        => $request->amount_paid,
+                'receipt_number'     => $receiptNumber,
+                'souvenir_collected' => $request->souvenir_collected ?? false,
+                'status'             => $request->status,
+            ]);
+
+            if ($request->has('souvenirs')) {
+                $payment->souvenirs()->sync($request->souvenirs);
+            }
+
+            return redirect()
+                ->route('dues_payments.index')
+                ->with('success', 'Payment recorded successfully.');
+
+        } catch (QueryException $e) {
+            // Handle rare race condition if duplicate still occurs
+            return back()->withErrors('Could not generate a unique receipt number. Please try again.');
         }
-
-        $payment = DuesPayment::create($request->only([
-            'student_id',
-            'due_id',
-            'academic_year_id',
-            'level_id',
-            'date_paid',
-            'amount_paid',
-            'receipt_number',
-            'souvenir_collected',
-            'status',
-        ]));
-
-        if ($request->has('souvenirs')) {
-            $payment->souvenirs()->sync($request->souvenirs);
-        }
-
-        return redirect()->route('dues_payments.index')->with('success', 'Payment recorded successfully.');
     }
 
     public function edit(DuesPayment $duesPayment)
